@@ -2,6 +2,7 @@ import pandas as pd
 import math
 from sklearn.utils import shuffle
 
+random_state = 1
 test_pc = 0.2
 val_pc = 0.2
 labels_file = './data/RawData/labels.txt'
@@ -20,7 +21,7 @@ def get_user_splits():
     val_ct = math.floor(val_pc * (total_users - test_ct))
     train_ct = total_users - test_ct - val_ct
 
-    users_list = list(shuffle(df['user_id'].unique()))
+    users_list = list(shuffle(df['user_id'].unique(), random_state=random_state))
 
     train_users = users_list[:train_ct]
     val_users = users_list[train_ct:train_ct+val_ct]
