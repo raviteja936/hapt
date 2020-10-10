@@ -5,7 +5,7 @@ from scipy import stats
 
 window = 50
 sensors = ['a1', 'a2', 'a3', 'g1', 'g2', 'g3']
-labels_file = './data/RawData/labels.txt'
+labels_file = 'labels.txt'
 names = ['experiment_id', 'user_id', 'activity_id', 'label_start', 'label_end']
 path = './data/RawData/'
 
@@ -13,9 +13,9 @@ path = './data/RawData/'
 class ReadSegment():
     def __init__(self, users):
         self.users = users
-        self.df_labels = pd.read_csv(labels_file, header=None, delim_whitespace=True, names=names)
+        self.df_labels = pd.read_csv(path + labels_file, header=None, delim_whitespace=True, names=names)
 
-    def get_labels(self, n ,expt, user):
+    def get_labels(self, n, expt, user):
         labels = -1 * np.ones(n)
         label_idxs = self.df_labels[(self.df_labels['user_id'] == user) & (self.df_labels['experiment_id'] == expt)].index
         for idx in label_idxs:

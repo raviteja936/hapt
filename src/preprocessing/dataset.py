@@ -2,8 +2,8 @@ from __future__ import print_function, division
 import torch
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
-from segmentation.get_segments import get_segments
-from features.feature_functions import get_features
+from segmentation.read_segment import ReadSegment
+from features.feature_functions import Features
 from utils.file_io import get_signal_files
 
 class HAPTDataset(Dataset):
@@ -16,10 +16,10 @@ class HAPTDataset(Dataset):
             transform (callable, optional): Optional transform to be applied
                 on a sample.
         """
-        self.users = users
-        files = get_signal_files(self.users)
-        self.segments, self.labels = SegmentFiles(files)
-        self.features = get_features(self.segments)
+        reader = ReadSegment(users)
+        self.segments, self.labels = reader.segment()
+        feature_extractor = Features()
+        self.features = feature_extractor(self.segments)
         self.transform = transform
 
     def __len__(self):
