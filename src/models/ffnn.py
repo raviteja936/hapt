@@ -19,3 +19,8 @@ class Net(nn.Module):
             x = F.relu(layer(x))
         x = self.final_layer(x)
         return x
+
+
+if __name__ == "__main__":
+    net = Net(36, 4, n_layers=3, n_units=(128, 128, 128))
+    print (list(net.parameters()))

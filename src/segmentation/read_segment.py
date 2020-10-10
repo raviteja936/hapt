@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
 from scipy import stats
+from tqdm import tqdm
 
 
 window = 50
+stride = 25
 sensors = ['a1', 'a2', 'a3', 'g1', 'g2', 'g3']
 labels_file = 'labels.txt'
 names = ['experiment_id', 'user_id', 'activity_id', 'label_start', 'label_end']
@@ -50,23 +52,22 @@ class ReadSegment():
 
     def segment(self):
         self.read_signal_files()
-        start = 0
-        end = start + window
         df_out = np.empty((0, len(sensors), window), float)
         labels = []
 
-        while (end < self.df_signals.shape[0]):
+        print("LOADING DATA#########################################################")
+        for start in tqdm(range(0, self.df_signals.shape[0]-stride, stride)):
+            end = start + window
+
             # label = self.get_segment_label(self.df_signals.iloc[start:end]['activity_id'])
             label = (stats.mode(self.df_signals.iloc[start:end][['activity_id']])[0][0][0])
             if (label == -1) or (self.df_signals.iloc[start]['user_id'] != self.df_signals.iloc[end]['user_id']):
-                start += 25
-                end += 25
                 continue
-            labels.append(label)
+
+            labels.append(label-1)
             curr_segment = self.df_signals.iloc[list(range(start, end)), :][sensors]
             df_out = np.append(df_out, np.reshape(np.array(curr_segment), (1, len(sensors), window)), axis=0)
-            start += 25
-            end += 25
+
         return df_out, np.array(labels)
 
 if __name__ == "__main__":

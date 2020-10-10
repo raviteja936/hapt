@@ -1,6 +1,7 @@
 from __future__ import print_function, division
 import torch
 from torch.utils.data import Dataset
+import numpy as np
 
 from src.segmentation.read_segment import ReadSegment
 from src.features.feature_functions import Features
@@ -30,8 +31,8 @@ class HAPTDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        x = self.features[idx]
-        y = self.labels[idx]
+        x = self.features[idx].astype('float32')
+        y = self.labels[idx].astype('int')
         sample = {'x': x, 'y': y}
 
         if self.transform:
