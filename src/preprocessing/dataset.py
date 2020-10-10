@@ -18,7 +18,7 @@ class HAPTDataset(Dataset):
         """
         self.users = users
         files = get_signal_files(self.users)
-        self.segments, self.labels = get_segments(files)
+        self.segments, self.labels = SegmentFiles(files)
         self.features = get_features(self.segments)
         self.transform = transform
 

@@ -45,5 +45,5 @@ def get_signal_files(users):
 
 if __name__ == "__main__":
     (train_users, val_users, test_users) = get_user_splits()
-    print(len(train_users), len(val_users), len(test_users))
+    print((train_users), len(val_users), len(test_users))
     print (get_signal_files(val_users))
