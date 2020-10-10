@@ -1,4 +1,4 @@
-
+import numpy as np
 
 class Features():
     def __init__(self):
@@ -10,8 +10,8 @@ class Features():
     def get_signal_features(self, signal):
         functions = [np.mean, np.std, np.amax, np.amin, np.quantile]
         function_args = {np.quantile: [[0.25, 0.75]]}
-        function_kwargs = {np.mean: {'axis': 0}, np.std: {'axis': 0}, np.amax: {'axis': 0}, np.amin: {'axis': 0},
-                           np.quantile: {'axis': 0}}
+        function_kwargs = {np.mean: {'axis': 1}, np.std: {'axis': 1}, np.amax: {'axis': 1}, np.amin: {'axis': 1},
+                           np.quantile: {'axis': 1}}
         features = []
         for f in functions:
             args = []
