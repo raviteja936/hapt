@@ -20,6 +20,7 @@ class HAPTDataset(Dataset):
         self.segments, self.labels = reader.segment()
         feature_extractor = Features()
         self.features = feature_extractor.get_features(self.segments)
+        print ("Features: ", self.features.shape, "Labels: ", self.labels.shape)
         self.transform = transform
 
     def __len__(self):
@@ -38,6 +39,8 @@ class HAPTDataset(Dataset):
         return sample
 
 if __name__ == "__main__":
-    hapt_dataset = HAPTDataset([2, 18, 6, 4, 25, 23,])
+    hapt_dataset = HAPTDataset([1, 2, 3])
+    # , 18, 6, 4, 25, 23
     sample = hapt_dataset[1]
-    print (sample['x'].shape)
+    print (sample['x'].shape, sample['y'].shape)
+    print (len(hapt_dataset))
