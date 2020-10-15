@@ -35,7 +35,7 @@ class TrainLoop:
 
                 if i % self.print_every == self.print_every-1:
                     print ("Loss: ", running_loss / self.print_every)
-                    self.writer.add_scalar('training loss', running_loss / self.print_every, epoch * len(self.trainloader) + i)
+                    self.writer.add_scalar('train loss', running_loss / self.print_every, epoch * len(self.trainloader) + i)
 
                     # # ...log a Matplotlib Figure showing the model's predictions on a
                     # # random mini-batch
@@ -43,7 +43,7 @@ class TrainLoop:
                     running_loss = 0.0
 
             train_accuracy = 100.0 * correct_train/total_train
-            val_accuracy = self.eval.predict(epoch)
+            val_accuracy, val_cm = self.eval.predict(epoch)
             print ("Epoch %d: Training Accuracy = %d%%,  Validation Accuracy = %d%%" % (epoch+1, train_accuracy, val_accuracy))
-
+            print (val_cm)
         print('Finished Training')

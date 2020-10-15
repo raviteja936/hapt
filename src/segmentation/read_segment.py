@@ -48,7 +48,7 @@ class ReadSegment():
                 df_out['user_id'] = user
                 df_out['activity_id'] = self.get_labels(df_out.shape[0], expt, user)
                 self.df_signals = pd.concat([self.df_signals, df_out], axis=0)
-        # print (self.df_signals.shape)
+        print (self.df_signals.shape)
 
     def segment(self):
         self.read_signal_files()
@@ -61,7 +61,7 @@ class ReadSegment():
 
             # label = self.get_segment_label(self.df_signals.iloc[start:end]['activity_id'])
             label = (stats.mode(self.df_signals.iloc[start:end][['activity_id']])[0][0][0])
-            if (label == -1) or (self.df_signals.iloc[start]['user_id'] != self.df_signals.iloc[end]['user_id']):
+            if (label == -1) or (label > 6) or (self.df_signals.iloc[start]['user_id'] != self.df_signals.iloc[end]['user_id']):
                 continue
 
             labels.append(label-1)
