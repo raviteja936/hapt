@@ -9,21 +9,26 @@ from src.models.ffnn import Net
 from src.train.trainloop import TrainLoop
 
 use_cuda = torch.cuda.is_available()
-device = torch.device("cuda:0" if use_cuda else "cpu")
+# device = torch.device("cuda:0" if use_cuda else "cpu")
+device = torch.device("cpu")
 
+activity_names = get_activity_names()
 train_users, val_users, test_users = get_user_splits()
 # Mean, Std = get_stats(train_users)
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
-activity_names = get_activity_names()
 
-train_dataset = HAPTDataset(train_users)
-val_dataset = HAPTDataset(val_users)
-test_dataset = HAPTDataset(test_users)
+# train_dataset = HAPTDataset(train_users)
+# val_dataset = HAPTDataset(val_users)
+# test_dataset = HAPTDataset(test_users)
 
-torch.save(train_dataset, './data/preprocessed/train_dataset.pt')
-torch.save(val_dataset, './data/preprocessed/val_dataset.pt')
-torch.save(test_dataset, './data/preprocessed/test_dataset.pt')
+# torch.save(train_dataset, './data/preprocessed/train_dataset.pt')
+# torch.save(val_dataset, './data/preprocessed/val_dataset.pt')
+# torch.save(test_dataset, './data/preprocessed/test_dataset.pt')
+
+train_dataset = torch.load('./data/preprocessed/train_dataset.pt', map_location=device)
+val_dataset = torch.load('./data/preprocessed/val_dataset.pt', map_location=device)
+test_dataset = torch.load('./data/preprocessed/test_dataset.pt', map_location=device)
 
 sample = train_dataset[1]
 
