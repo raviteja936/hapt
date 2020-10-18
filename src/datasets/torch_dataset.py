@@ -7,6 +7,7 @@ from src.segmentation.read_segment import ReadSegment
 from src.features.feature_functions import Features
 # from utils.file_io import get_signal_files
 
+
 class HAPTDataset(Dataset):
 
     def __init__(self, users, transform=None):
@@ -21,6 +22,8 @@ class HAPTDataset(Dataset):
         self.segments, self.labels = reader.segment()
         feature_extractor = Features()
         self.features = feature_extractor.get_features(self.segments)
+        self.features = torch.from_numpy(self.features.astype('float32'))
+        self.labels = torch.from_numpy(self.labels.astype('int'))
         print ("Dataset created with shape -> Features: ", self.features.shape, "Labels: ", self.labels.shape)
         self.transform = transform
 
@@ -31,8 +34,8 @@ class HAPTDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        x = self.features[idx].astype('float32')
-        y = self.labels[idx].astype('int')
+        x = self.features[idx]
+        y = self.labels[idx]
         sample = {'x': x, 'y': y}
 
         if self.transform:

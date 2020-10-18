@@ -1,6 +1,7 @@
 import pandas as pd
 import math
 from sklearn.utils import shuffle
+from src.segmentation.read_segment import ReadSegment
 
 random_state = 1
 test_pc = 0.2
@@ -9,9 +10,11 @@ labels_file = './data/RawData/labels.txt'
 names = ['experiment_id', 'user_id', 'activity_id', 'label_start', 'label_end']
 activities_file = './data/activity_labels.txt'
 
+
 def get_activity_names():
     activities = pd.read_csv(activities_file, header=None, delim_whitespace=True, names=['activity_id', 'activity'])
     return list(activities.sort_values(by='activity_id')['activity'])
+
 
 def get_user_splits():
     df = pd.read_csv(labels_file, header=None, delim_whitespace=True, names=names)
@@ -25,7 +28,13 @@ def get_user_splits():
     train_users = users_list[:train_ct]
     val_users = users_list[train_ct:train_ct+val_ct]
     test_users = users_list[train_ct+val_ct:]
-    return (train_users, val_users, test_users)
+    return train_users, val_users, test_users
+
+
+def get_stats(users):
+    reader = ReadSegment(users)
+    reader.read_signal_files()
+    return reader.get_stats()
 
 
 if __name__ == "__main__":

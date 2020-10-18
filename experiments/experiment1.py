@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-from src.utils.file_io import get_user_splits, get_activity_names
+from src.utils.file_io import get_user_splits, get_activity_names, get_stats
 from src.datasets.torch_dataset import HAPTDataset
 from src.models.ffnn import Net
 from src.train.trainloop import TrainLoop
@@ -12,10 +12,18 @@ use_cuda = torch.cuda.is_available()
 device = torch.device("cuda:0" if use_cuda else "cpu")
 
 train_users, val_users, test_users = get_user_splits()
+# Mean, Std = get_stats(train_users)
+# print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 activity_names = get_activity_names()
+
 train_dataset = HAPTDataset(train_users)
 val_dataset = HAPTDataset(val_users)
+test_dataset = HAPTDataset(test_users)
+
+torch.save(train_dataset, './data/preprocessed/train_dataset.pt')
+torch.save(val_dataset, './data/preprocessed/val_dataset.pt')
+torch.save(test_dataset, './data/preprocessed/test_dataset.pt')
 
 sample = train_dataset[1]
 

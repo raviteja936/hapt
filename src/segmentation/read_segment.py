@@ -7,6 +7,9 @@ from tqdm import tqdm
 window = 50
 stride = 25
 sensors = ['a1', 'a2', 'a3', 'g1', 'g2', 'g3']
+means = [0.8258365140465357, -0.011189948135622126, 0.07350957819992998, 0.021580320059638523, -0.009909851091173486, -0.011808718360273666]
+stds = [0.38593920553146555, 0.38144292588805123, 0.35258332424300165, 0.5734890112106984, 0.44280906155490224, 0.34660938960079046]
+
 labels_file = 'labels.txt'
 names = ['experiment_id', 'user_id', 'activity_id', 'label_start', 'label_end']
 path = './data/RawData/'
@@ -44,11 +47,15 @@ class ReadSegment():
                 df_gyro = pd.read_csv(gyro_file, header=None, delim_whitespace=True, names=['g1', 'g2', 'g3'])
                 assert df_acc.shape[0] == df_gyro.shape[0]
                 df_out = pd.concat([df_acc, df_gyro], axis=1)
+                df_out = 1.0 * (df_out - means)/stds
                 df_out['experiment_id'] = expt
                 df_out['user_id'] = user
                 df_out['activity_id'] = self.get_labels(df_out.shape[0], expt, user)
                 self.df_signals = pd.concat([self.df_signals, df_out], axis=0)
-        print (self.df_signals.shape)
+        print(self.df_signals.shape)
+
+    def get_stats(self):
+        return self.df_signals[sensors].mean(axis=0), self.df_signals[sensors].std(axis=0)
 
     def segment(self):
         self.read_signal_files()
