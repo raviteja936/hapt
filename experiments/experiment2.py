@@ -17,11 +17,11 @@ device = torch.device("cpu")
 
 batch_size = 256
 n_layers = 3
-n_units = (128, 256, 128)
+n_units = (512, 1024, 512)
 lr = 0.001
 momentum = 0.9
 max_epochs = 20
-writer = SummaryWriter("experiments/runs/experiment_1")
+writer = SummaryWriter("experiments/runs/experiment_2")
 
 activity_names = get_activity_names()
 train_users, val_users, test_users = get_user_splits()

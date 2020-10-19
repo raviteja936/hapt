@@ -3,7 +3,6 @@ import pandas as pd
 from scipy import stats
 from tqdm import tqdm
 
-
 window = 50
 stride = 25
 sensors = ['a1', 'a2', 'a3', 'g1', 'g2', 'g3']
@@ -15,10 +14,11 @@ names = ['experiment_id', 'user_id', 'activity_id', 'label_start', 'label_end']
 path = './data/RawData/'
 
 
-class ReadSegment():
+class ReadSegment:
     def __init__(self, users):
         self.users = users
         self.df_labels = pd.read_csv(path + labels_file, header=None, delim_whitespace=True, names=names)
+        self.df_signals = pd.DataFrame(columns=['experiment_id', 'user_id', 'activity_id', 'a1', 'a2', 'a3', 'g1', 'g2', 'g3'])
 
     def get_labels(self, n, expt, user):
         labels = -1 * np.ones(n)
@@ -31,8 +31,6 @@ class ReadSegment():
         return labels.mode().item()
 
     def read_signal_files(self):
-        self.df_signals = pd.DataFrame(
-            columns=['experiment_id', 'user_id', 'activity_id', 'a1', 'a2', 'a3', 'g1', 'g2', 'g3'])
         for user in self.users:
             experiments = self.df_labels.loc[self.df_labels['user_id'] == user].experiment_id.unique()
             for expt in experiments:
@@ -59,6 +57,9 @@ class ReadSegment():
 
     def segment(self):
         self.read_signal_files()
+        df_out = self.df_signals[(self.df_signals['activity_id'] != -1) & (self.df_signals['activity_id'] <= 6)][sensors]
+        labels = self.df_signals[(self.df_signals['activity_id'] != -1) & (self.df_signals['activity_id'] <= 6)]['activity_id']
+        return np.array(df_out), np.array(labels)
         df_out = np.empty((0, len(sensors), window), float)
         labels = []
 

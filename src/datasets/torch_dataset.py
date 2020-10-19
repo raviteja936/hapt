@@ -20,11 +20,13 @@ class HAPTDataset(Dataset):
         """
         reader = ReadSegment(users)
         self.segments, self.labels = reader.segment()
-        feature_extractor = Features()
-        self.features = feature_extractor.get_features(self.segments)
-        self.features = torch.from_numpy(self.features.astype('float32'))
-        self.labels = torch.from_numpy(self.labels.astype('int'))
-        print ("Dataset created with shape -> Features: ", self.features.shape, "Labels: ", self.labels.shape)
+        # feature_extractor = Features()
+        # self.features = feature_extractor.get_features(self.segments)
+        self.features = np.reshape(self.segments, (-1, 6))
+        print("Dataset created with shape -> Features: ", self.features.shape, "Labels: ", self.labels.shape)
+
+        self.features = torch.from_numpy(self.features).type(torch.float)
+        self.labels = torch.from_numpy(self.labels).type(torch.long)
         self.transform = transform
 
     def __len__(self):
