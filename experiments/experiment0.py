@@ -22,7 +22,7 @@ n_units = (128, 256, 128)
 lr = 0.001
 momentum = 0.9
 max_epochs = 20
-writer = SummaryWriter("experiments/runs/experiment_0")
+writer = SummaryWriter("experiments/tensorboard/experiment_0")
 
 activity_names = get_activity_names()
 train_users, val_users, test_users = get_user_splits()

@@ -9,7 +9,7 @@ from src.models.ffnn import Net
 from src.train.trainloop import TrainLoop
 
 '''
-Fit the model to preprocessed sensor data with window = 50, stride = 25, basic statistical features + freq domain features
+Fit the model to preprocessed sensor data with window = 50, stride = 25, basic statistical features 
 '''
 use_cuda = torch.cuda.is_available()
 device = torch.device("cpu")
@@ -17,11 +17,11 @@ device = torch.device("cpu")
 
 batch_size = 256
 n_layers = 3
-n_units = (128, 256, 128)
+n_units = (512, 1024, 512)
 lr = 0.001
 momentum = 0.9
 max_epochs = 20
-writer = SummaryWriter("experiments/tensorboard/experiment_1")
+writer = SummaryWriter("experiments/tensorboard/experiment_4")
 
 activity_names = get_activity_names()
 train_users, val_users, test_users = get_user_splits()
@@ -29,16 +29,16 @@ train_users, val_users, test_users = get_user_splits()
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 
-# train_dataset = HAPTDataset(train_users)
-# val_dataset = HAPTDataset(val_users)
-# test_dataset = HAPTDataset(test_users)
+train_dataset = HAPTDataset(train_users)
+val_dataset = HAPTDataset(val_users)
+test_dataset = HAPTDataset(test_users)
 
-# torch.save(train_dataset, './data/preprocessed/train_dataset.pt')
-# torch.save(val_dataset, './data/preprocessed/val_dataset.pt')
-# torch.save(test_dataset, './data/preprocessed/test_dataset.pt')
+torch.save(train_dataset, './data/preprocessed/train_dataset_experiment4.pt')
+torch.save(val_dataset, './data/preprocessed/val_dataset_experiment4.pt')
+torch.save(test_dataset, './data/preprocessed/test_dataset_experiment4.pt')
 
-train_dataset = torch.load('./data/preprocessed/train_dataset.pt', map_location=device)
-val_dataset = torch.load('./data/preprocessed/val_dataset.pt', map_location=device)
+# train_dataset = torch.load('./data/preprocessed/train_dataset.pt', map_location=device)
+# val_dataset = torch.load('./data/preprocessed/val_dataset.pt', map_location=device)
 # test_dataset = torch.load('./data/preprocessed/test_dataset.pt', map_location=device)
 
 sample = train_dataset[1]

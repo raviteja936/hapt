@@ -57,9 +57,9 @@ class ReadSegment:
 
     def segment(self):
         self.read_signal_files()
-        df_out = self.df_signals[(self.df_signals['activity_id'] != -1) & (self.df_signals['activity_id'] <= 6)][sensors]
-        labels = self.df_signals[(self.df_signals['activity_id'] != -1) & (self.df_signals['activity_id'] <= 6)]['activity_id']
-        return np.array(df_out), np.array(labels)
+        # df_out = self.df_signals[(self.df_signals['activity_id'] != -1) & (self.df_signals['activity_id'] <= 6)][sensors]
+        # labels = self.df_signals[(self.df_signals['activity_id'] != -1) & (self.df_signals['activity_id'] <= 6)]['activity_id']
+        # return np.array(df_out), np.array(labels)
         df_out = np.empty((0, len(sensors), window), float)
         labels = []
 

@@ -9,7 +9,7 @@ from src.models.ffnn import Net
 from src.train.trainloop import TrainLoop
 
 '''
-Fit the model to preprocessed sensor data with window = 50, stride = 25, basic statistical features  
+Fit the model to preprocessed sensor data with window = 50, stride = 25, basic statistical features + freq domain features
 '''
 use_cuda = torch.cuda.is_available()
 device = torch.device("cpu")
@@ -21,7 +21,7 @@ n_units = (512, 1024, 512)
 lr = 0.001
 momentum = 0.9
 max_epochs = 20
-writer = SummaryWriter("experiments/runs/experiment_2")
+writer = SummaryWriter("experiments/tensorboard/experiment_2")
 
 activity_names = get_activity_names()
 train_users, val_users, test_users = get_user_splits()
