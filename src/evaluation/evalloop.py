@@ -9,7 +9,7 @@ class EvalLoop:
     def predict(self):
         total = 0
         correct = 0
-        nb_classes = 12
+        nb_classes = 6
         confusion_matrix = torch.zeros(nb_classes, nb_classes)
         with torch.no_grad():
             for data in self.dataloader:

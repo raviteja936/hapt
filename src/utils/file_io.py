@@ -1,7 +1,7 @@
 import pandas as pd
 import math
 from sklearn.utils import shuffle
-from src.segmentation.read_segment import ReadSegment
+from src.datareader.read_segment import ReadSegment
 
 random_state = 1
 test_pc = 0.2
@@ -33,7 +33,7 @@ def get_user_splits():
 
 def get_stats(users):
     reader = ReadSegment(users)
-    reader.read_signal_files()
+    reader.read_files()
     return reader.get_stats()
 
 

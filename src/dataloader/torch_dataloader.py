@@ -3,14 +3,14 @@ import torch
 from torch.utils.data import Dataset
 import numpy as np
 
-from src.segmentation.read_segment import ReadSegment
+from src.datareader.read_segment import ReadSegment
 from src.features.feature_functions import Features
 # from utils.file_io import get_signal_files
 
 
-class HAPTDataset(Dataset):
+class CustomDataset(Dataset):
 
-    def __init__(self, users, transform=None):
+    def __init__(self, users, window=50, stride=25, transform=None):
         """
         Args:
             csv_file (string): Path to the csv file with annotations.
@@ -19,7 +19,7 @@ class HAPTDataset(Dataset):
                 on a sample.
         """
         reader = ReadSegment(users)
-        self.segments, self.labels = reader.segment()
+        self.segments, self.labels = reader.segment(window, stride)
         feature_extractor = Features()
         self.features = feature_extractor.get_features(self.segments)
         # self.features = np.reshape(self.segments, (-1, 6))
@@ -30,7 +30,7 @@ class HAPTDataset(Dataset):
         self.transform = transform
 
     def __len__(self):
-        return (self.features.shape[0])
+        return self.features.shape[0]
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
@@ -39,14 +39,14 @@ class HAPTDataset(Dataset):
         x = self.features[idx]
         y = self.labels[idx]
         sample = {'x': x, 'y': y}
-
         if self.transform:
             sample = self.transform(sample)
         return sample
 
+
 if __name__ == "__main__":
-    hapt_dataset = HAPTDataset([1, 2, 3])
+    hapt_dataset = CustomDataset([1, 2, 3])
     # , 18, 6, 4, 25, 23
     sample = hapt_dataset[1]
-    print (sample['x'].shape, sample['y'].shape)
-    print (len(hapt_dataset))
+    print(sample['x'].shape, sample['y'].shape)
+    print(len(hapt_dataset))

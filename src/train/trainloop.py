@@ -2,18 +2,18 @@ import torch
 from src.evaluation.evalloop import EvalLoop
 
 class TrainLoop:
-    def __init__(self, model, trainloader, optimizer, loss_fn, device, writer, valloader=None, print_every=100):
+    def __init__(self, model, train_loader, optimizer, loss_fn, device, writer, val_loader=None, print_every=100):
         self.model = model
-        self.trainloader = trainloader
+        self.train_loader = train_loader
         self.optimizer = optimizer
         self.loss_fn = loss_fn
         self.device = device
         self.writer = writer
         self.print_every = print_every
-        if valloader:
-            self.eval = EvalLoop(model, valloader, self.device)
+        if val_loader:
+            self.eval = EvalLoop(model, val_loader, self.device)
         else:
-            self.eval = EvalLoop(model, trainloader, self.device)
+            self.eval = EvalLoop(model, train_loader, self.device)
 
     def fit(self, epochs=1):
         for epoch in range(epochs):
@@ -21,7 +21,7 @@ class TrainLoop:
             total_train = 0
             correct_train = 0
 
-            for i, data in enumerate(self.trainloader):
+            for i, data in enumerate(self.train_loader):
                 inputs, labels = data['x'], data['y']
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 self.optimizer.zero_grad()
@@ -38,7 +38,7 @@ class TrainLoop:
 
                 if i % self.print_every == self.print_every-1:
                     print("Loss: ", running_loss / self.print_every)
-                    self.writer.add_scalar("Training loss", running_loss / self.print_every, 10 * epoch + int((i * 10) / len(self.trainloader)))
+                    self.writer.add_scalar("Training loss", running_loss / self.print_every, 10 * epoch + int((i * 10) / len(self.train_loader)))
                     running_loss = 0.0
 
             train_accuracy = 100.0 * correct_train/total_train

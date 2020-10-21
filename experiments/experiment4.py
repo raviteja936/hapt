@@ -4,7 +4,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from src.utils.file_io import get_user_splits, get_activity_names, get_stats
-from src.datasets.torch_dataset import HAPTDataset
+from src.dataloader.torch_dataloader import CustomDataLoader
 from src.models.ffnn import Net
 from src.train.trainloop import TrainLoop
 
@@ -29,9 +29,9 @@ train_users, val_users, test_users = get_user_splits()
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 
-train_dataset = HAPTDataset(train_users)
-val_dataset = HAPTDataset(val_users)
-test_dataset = HAPTDataset(test_users)
+train_dataset = CustomDataLoader(train_users)
+val_dataset = CustomDataLoader(val_users)
+test_dataset = CustomDataLoader(test_users)
 
 torch.save(train_dataset, './data/preprocessed/train_dataset_experiment4.pt')
 torch.save(val_dataset, './data/preprocessed/val_dataset_experiment4.pt')
@@ -42,8 +42,8 @@ torch.save(test_dataset, './data/preprocessed/test_dataset_experiment4.pt')
 # test_dataset = torch.load('./data/preprocessed/test_dataset.pt', map_location=device)
 
 sample = train_dataset[1]
-trainloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
-valloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+trainloader = CustomDataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+valloader = CustomDataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
 
 net = Net(sample['x'].shape[0], 12, n_layers=n_layers, n_units=n_units)
 net.to(device)
@@ -51,5 +51,5 @@ loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=lr, momentum=momentum)
 
 print_every = int(len(train_dataset)/(10 * batch_size))
-train = TrainLoop(net, trainloader, optimizer, loss_fn, device, writer, valloader=valloader, print_every=print_every)
+train = TrainLoop(net, trainloader, optimizer, loss_fn, device, writer, val_loader=valloader, print_every=print_every)
 train.fit(max_epochs)
