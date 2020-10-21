@@ -59,7 +59,7 @@ class ReadSegment:
         if window == 1:
             segments = self.signals[self.signals['activity_id'].isin(labels_to_use)][sensors]
             labels = self.signals[self.signals['activity_id'].isin(labels_to_use)]['activity_id']
-            return np.array(segments), np.array(labels)
+            return np.reshape(np.array(segments), (-1, len(sensors), 1)), np.array(labels)
 
         else:
             segments = np.empty((0, len(sensors), window), float)
@@ -73,7 +73,6 @@ class ReadSegment:
                 labels.append(label - 1)
                 curr_segment = self.signals.iloc[list(range(start, end)), :][sensors]
                 segments = np.append(segments, np.reshape(np.array(curr_segment), (1, len(sensors), window)), axis=0)
-            print (self.signals.shape[0], segments.shape, len(labels))
             return segments, np.array(labels)
 
 

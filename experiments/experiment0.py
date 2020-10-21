@@ -32,7 +32,7 @@ train_users, val_users, test_users = get_user_splits()
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 
-train_dataset = CustomDataset(train_users[:1], window, stride)
+train_dataset = CustomDataset(train_users, window, stride)
 # val_dataset = CustomDataset(val_users, window, stride)
 # test_dataset = CustomDataset(test_users, window, stride)
 
