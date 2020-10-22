@@ -3,10 +3,6 @@ from src.features.rough import get_fft_values, get_psd_values, get_autocorr_valu
 from tsfresh.feature_extraction import feature_calculators
 
 
-N = 50
-f_s = 50
-t_n = 1
-T = t_n / N
 percentile = 5
 denominator = 10
 

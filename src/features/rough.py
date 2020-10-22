@@ -21,7 +21,7 @@ def get_features(x_values, y_values, mph):
     return peaks_x + peaks_y
 
 
-def get_fft_values(y_values, T=0.02, N=50):
+def get_fft_values(y_values, T=0.0078125, N=128):
     f_values = np.linspace(0.0, 1.0 / (2.0 * T), N // 2)
     fft_values_ = fft(y_values)
     fft_values = 2.0 / N * np.abs(fft_values_[0:N // 2])
@@ -44,7 +44,7 @@ def autocorr(x):
     return result[len(result) // 2:]
 
 
-def get_autocorr_values(y_values, T=0.02, N=50):
+def get_autocorr_values(y_values, T=0.0078125, N=128):
     autocorr_values = autocorr(y_values)
     x_values = np.array([T * jj for jj in range(0, N)])
     signal_min = np.nanpercentile(y_values, percentile)
