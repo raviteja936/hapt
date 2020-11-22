@@ -33,19 +33,17 @@ class Net(nn.Module):
         x = F.relu(self.conv4(x))
 
         x = x.view(x.size(2), x.size(0), -1)
-        print(x.shape)
         hidden = (weight.new(1, batch_size, self.n_lstm).zero_(), weight.new(1, batch_size, self.n_lstm).zero_())
-        print(hidden[0].shape, hidden[1].shape)
         x, hidden = self.lstm1(x, hidden)
         x, hidden = self.lstm2(x, hidden)
 
         x = x.view(-1, self.n_lstm)
         x = x.contiguous()
+
         x = self.dropout(x)
         x = self.fc(x)
-
         out = x.view(batch_size, -1, self.n_classes)[:, -1, :]
-        return out, hidden
+        return out
 
 
 if __name__ == "__main__":

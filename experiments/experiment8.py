@@ -29,30 +29,28 @@ train_users, val_users, test_users = get_user_splits()
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 
-train_dataset = CustomDataset(train_users[:1], stride, window=window, extract_feat=False)
+train_dataset = CustomDataset(train_users[:5], stride, window=window, extract_feat=False)
 # val_dataset = CustomDataset(val_users, stride, window=window, extract_feat=False)
 # test_dataset = CustomDataset(test_users, window, stride, extract_feat=False)
 
-# torch.save(train_dataset, './data/preprocessed/train_dataset_experiment5.pt')
-# torch.save(val_dataset, './data/preprocessed/val_dataset_experiment5.pt')
-# torch.save(test_dataset, './data/preprocessed/test_dataset_experiment5.pt')
+# torch.save(train_dataset, './data/preprocessed/train_dataset_experiment8.pt')
+# torch.save(val_dataset, './data/preprocessed/val_dataset_experiment8.pt')
+# torch.save(test_dataset, './data/preprocessed/test_dataset_experiment8.pt')
 
-# train_dataset = torch.load('./data/preprocessed/train_dataset.pt', map_location=device)
-# val_dataset = torch.load('./data/preprocessed/val_dataset.pt', map_location=device)
-# test_dataset = torch.load('./data/preprocessed/test_dataset.pt', map_location=device)
+# train_dataset = torch.load('./data/preprocessed/train_dataset_experiment8.pt', map_location=device)
+# val_dataset = torch.load('./data/preprocessed/val_dataset_experiment8.pt', map_location=device)
+# test_dataset = torch.load('./data/preprocessed/test_dataset_experiment8.pt', map_location=device)
 
-sample = train_dataset[1]
+# sample = train_dataset[1]
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-# val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
-
-# tango = next(iter(train_loader))
-# print(tango['x'].shape)
+val_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
 
 net = Net(6)
 net.to(device)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=lr, momentum=momentum)
 
-print_every = int(len(train_dataset)/(10 * batch_size))
-train = TrainLoop(net, train_loader, optimizer, loss_fn, device, writer, val_loader=train_loader, print_every=print_every)
+# print_every = int(len(train_dataset)/(10 * batch_size))
+print_every = 1
+train = TrainLoop(net, train_loader, optimizer, loss_fn, device, writer, val_loader=val_loader, print_every=print_every)
 train.fit(max_epochs)
