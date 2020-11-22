@@ -16,21 +16,26 @@ class Net(nn.Module):
         self.conv3 = nn.Conv2d(n_conv, n_conv, kernel_size)
         self.conv4 = nn.Conv2d(n_conv, n_conv, kernel_size)
 
-        self.lstm1 = nn.LSTM(n_conv, n_lstm)
+        self.lstm1 = nn.LSTM(n_conv * 128, n_lstm)
         self.lstm2 = nn.LSTM(n_lstm, n_lstm)
 
         self.fc = nn.Linear(n_lstm, n_classes)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x, hidden):
-        # x = x.view(-1, self.out_dim, SLIDING_WINDOW_LENGTH)
+    def forward(self, x):
         batch_size = x.size(0)
+        weight = next(self.parameters()).data
+
+        x = x.view(x.size(0), 1, x.size(1), x.size(2))
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = F.relu(self.conv4(x))
 
         x = x.view(x.size(2), x.size(0), -1)
+        print(x.shape)
+        hidden = (weight.new(1, batch_size, self.n_lstm).zero_(), weight.new(1, batch_size, self.n_lstm).zero_())
+        print(hidden[0].shape, hidden[1].shape)
         x, hidden = self.lstm1(x, hidden)
         x, hidden = self.lstm2(x, hidden)
 

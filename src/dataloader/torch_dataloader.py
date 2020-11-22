@@ -26,8 +26,7 @@ class CustomDataset(Dataset):
         if extract_feat:
             self.features = feature_extractor.get_features(self.segments)
         else:
-            self.features = self.segments
-            # self.features = np.reshape(self.segments, (-1, 6))
+            self.features = np.transpose(self.segments, [1, 0, 2])
         print("Dataset created with shape -> Features: ", self.features.shape, "Labels: ", self.labels.shape)
 
         self.features = torch.from_numpy(self.features).type(torch.float)

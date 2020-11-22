@@ -31,16 +31,16 @@ train_users, val_users, test_users = get_user_splits()
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 
-train_dataset = CustomDataset(train_users, stride, window=window)
-val_dataset = CustomDataset(val_users, stride, window=window)
+# train_dataset = CustomDataset(train_users[:1], stride, window=window)
+# val_dataset = CustomDataset(val_users, stride, window=window)
 # test_dataset = CustomDataset(test_users, window, stride)
 
-# torch.save(train_dataset, './data/preprocessed/train_dataset_experiment5.pt')
+# torch.save(train_dataset, './data/preprocessed/train_dataset_experiment7.pt')
 # torch.save(val_dataset, './data/preprocessed/val_dataset_experiment5.pt')
 # torch.save(test_dataset, './data/preprocessed/test_dataset_experiment5.pt')
 
-# train_dataset = torch.load('./data/preprocessed/train_dataset.pt', map_location=device)
-# val_dataset = torch.load('./data/preprocessed/val_dataset.pt', map_location=device)
+train_dataset = torch.load('./data/preprocessed/train_dataset_experiment5.pt')
+val_dataset = torch.load('./data/preprocessed/val_dataset_experiment5.pt')
 # test_dataset = torch.load('./data/preprocessed/test_dataset.pt', map_location=device)
 
 sample = train_dataset[1]

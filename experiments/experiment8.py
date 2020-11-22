@@ -15,7 +15,7 @@ use_cuda = torch.cuda.is_available()
 device = torch.device("cpu")
 # device = torch.device("cuda:0" if use_cuda else "cpu")
 
-batch_size = 256
+batch_size = 10
 lr = 0.001
 momentum = 0.9
 max_epochs = 40
@@ -29,7 +29,7 @@ train_users, val_users, test_users = get_user_splits()
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 
-train_dataset = CustomDataset(train_users[0], stride, window=window, extract_feat=False)
+train_dataset = CustomDataset(train_users[:1], stride, window=window, extract_feat=False)
 # val_dataset = CustomDataset(val_users, stride, window=window, extract_feat=False)
 # test_dataset = CustomDataset(test_users, window, stride, extract_feat=False)
 
@@ -43,7 +43,10 @@ train_dataset = CustomDataset(train_users[0], stride, window=window, extract_fea
 
 sample = train_dataset[1]
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+# val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+
+# tango = next(iter(train_loader))
+# print(tango['x'].shape)
 
 net = Net(6)
 net.to(device)
@@ -51,5 +54,5 @@ loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=lr, momentum=momentum)
 
 print_every = int(len(train_dataset)/(10 * batch_size))
-train = TrainLoop(net, train_loader, optimizer, loss_fn, device, writer, val_loader=val_loader, print_every=print_every)
+train = TrainLoop(net, train_loader, optimizer, loss_fn, device, writer, val_loader=train_loader, print_every=print_every)
 train.fit(max_epochs)
