@@ -10,19 +10,24 @@ from src.features.feature_functions import Features
 
 class CustomDataset(Dataset):
 
-    def __init__(self, users, window=50, stride=25, transform=None):
+    def __init__(self, users, stride=25, transform=None, window=50, extract_feat=True):
         """
         Args:
             csv_file (string): Path to the csv file with annotations.
             root_dir (string): Directory with all the images.
             transform (callable, optional): Optional transform to be applied
                 on a sample.
+                :param extract_feat:
         """
         reader = ReadSegment(users)
         self.segments, self.labels = reader.segment(window, stride)
         feature_extractor = Features()
-        self.features = feature_extractor.get_features(self.segments)
-        # self.features = np.reshape(self.segments, (-1, 6))
+
+        if extract_feat:
+            self.features = feature_extractor.get_features(self.segments)
+        else:
+            self.features = self.segments
+            # self.features = np.reshape(self.segments, (-1, 6))
         print("Dataset created with shape -> Features: ", self.features.shape, "Labels: ", self.labels.shape)
 
         self.features = torch.from_numpy(self.features).type(torch.float)

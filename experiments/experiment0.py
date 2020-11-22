@@ -32,7 +32,7 @@ train_users, val_users, test_users = get_user_splits()
 # print("Means: ", list(Mean), "Std Devs: ", list(Std))
 # print(len(train_users), len(val_users), len(test_users))
 
-train_dataset = CustomDataset(train_users[:1], window, stride)
+train_dataset = CustomDataset(train_users[:1], stride, window=window)
 # val_dataset = CustomDataset(val_users, window, stride)
 # test_dataset = CustomDataset(test_users, window, stride)
 
@@ -40,19 +40,19 @@ train_dataset = CustomDataset(train_users[:1], window, stride)
 # torch.save(val_dataset, './data/preprocessed/val_dataset.pt')
 # torch.save(test_dataset, './data/preprocessed/test_dataset.pt')
 
-# train_dataset = torch.load('./data/preprocessed/train_dataset.pt', map_location=device)
-# val_dataset = torch.load('./data/preprocessed/val_dataset.pt', map_location=device)
+train_dataset = torch.load('./data/preprocessed/train_dataset.pt', map_location=device)
+val_dataset = torch.load('./data/preprocessed/val_dataset.pt', map_location=device)
 # test_dataset = torch.load('./data/preprocessed/test_dataset.pt', map_location=device)
 
-# sample = train_dataset[1]
-# train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-# val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
-#
-# net = Net(sample['x'].shape[0], 6, n_layers=n_layers, n_units=n_units)
-# net.to(device)
-# loss_fn = nn.CrossEntropyLoss()
-# optimizer = optim.SGD(net.parameters(), lr=lr, momentum=momentum)
-#
-# print_every = int(len(train_dataset)/(10 * batch_size))
-# train = TrainLoop(net, train_loader, optimizer, loss_fn, device, writer, val_loader=val_loader, print_every=print_every)
-# train.fit(max_epochs)
+sample = train_dataset[1]
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+
+net = Net(sample['x'].shape[0], 6, n_layers=n_layers, n_units=n_units)
+net.to(device)
+loss_fn = nn.CrossEntropyLoss()
+optimizer = optim.SGD(net.parameters(), lr=lr, momentum=momentum)
+
+print_every = int(len(train_dataset)/(10 * batch_size))
+train = TrainLoop(net, train_loader, optimizer, loss_fn, device, writer, val_loader=val_loader, print_every=print_every)
+train.fit(max_epochs)
